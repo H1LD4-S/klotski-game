@@ -5,6 +5,7 @@ import model.MapModel;
 import view.game.BoxComponent;
 import view.game.GamePanel;
 
+import javax.swing.*;
 import java.io.*;
 
 /**
@@ -22,10 +23,13 @@ public class GameController {
     }
     public void setCurrentUser(String user) {
         this.currentUser = user;
+        if (user != null) {
+            autoLoadGame();//登录后加载进度
+        }
     }
     public void saveGame() {
         if (currentUser == null) {
-            return; // 游客不能保存
+            return; // 游客无法保存进度
         }
         String filePath = currentUser + "_game.data";
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
@@ -37,7 +41,7 @@ public class GameController {
     }
     public void loadGame() {
         if (currentUser == null) {
-            return; // 游客不能加载
+            return; // 游客无法加载进度
         }
         String filePath = currentUser + "_game.data";
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
@@ -47,8 +51,13 @@ public class GameController {
             view.clearBoxes();
             view.initialGame();
             view.setSteps(savedSteps);
+            view.revalidate();
+            view.repaint();
+            System.out.println("游戏进度成功从 " + filePath+ "加载");
         } catch (IOException | ClassNotFoundException e) {
+            System.err.println("加载游戏进度时出错: " + e.getMessage());
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "加载游戏进度失败，请检查保存文件是否存在", "错误", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -56,7 +65,9 @@ public class GameController {
     public void restartGame() {
         System.out.println("Do restart game here");
     }
-
+    private void autoLoadGame() {
+        loadGame();
+    }
     public boolean doMove(int row, int col, Direction direction) {
         if (model.getId(row, col) == 1) {
             int nextRow = row + direction.getRow();
