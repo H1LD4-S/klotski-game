@@ -8,10 +8,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameFrame extends JFrame {
-
+    private String currentUser;
     private GameController controller;
     private JButton restartBtn;
     private JButton loadBtn;
+
 
     private JLabel stepLabel;
     private GamePanel gamePanel;
@@ -42,6 +43,15 @@ public class GameFrame extends JFrame {
         //todo: add other button here
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+    public void setUser(String user) {
+        this.currentUser = user;
+        // 游客禁用保存按钮
+        if (user == null) {
+            loadBtn.setEnabled(false);
+        } else {
+            loadBtn.setEnabled(true);
+        }
     }
 
 }
