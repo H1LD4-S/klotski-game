@@ -22,8 +22,21 @@ public class GamePanel extends ListenerPanel {
     private int steps;
     private final int GRID_SIZE = 50;
     private BoxComponent selectedBox;
-
-
+    public int getSteps() {
+        return steps;
+    }
+    public void setSteps(int steps) {
+        this.steps = steps;
+        if (stepLabel != null) {
+            stepLabel.setText("Step: " + steps);
+        }
+    }
+    public void clearBoxes() {
+        // 实现清空方块的逻辑，例如移除所有组件
+        this.removeAll();
+        this.revalidate();
+        this.repaint();
+    }
     public GamePanel(MapModel model) {
         boxes = new ArrayList<>();
         this.setVisible(true);
