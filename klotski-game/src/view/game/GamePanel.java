@@ -20,8 +20,10 @@ public class GamePanel extends ListenerPanel {
     private GameController controller;
     private JLabel stepLabel;
     private int steps;
-    private final int GRID_SIZE = 50;
+    private final int GRID_SIZE = 200;
     private BoxComponent selectedBox;
+    private static final Map<Integer, Image> IMAGE_CACHE = new HashMap<>();
+    
     public int getSteps() {
         return steps;
     }
@@ -57,37 +59,64 @@ public class GamePanel extends ListenerPanel {
      */
     public void initialGame() {
         this.steps = 0;
+        //copy a map
         int[][] map = new int[model.getHeight()][model.getWidth()];
-        for (int i = 0; i < model.getHeight(); i++) {
-            System.arraycopy(model.getMatrix()[i], 0, map[i], 0, model.getWidth());
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+                map[i][j] = model.getId(i, j);
+            }
+        }
+        for (Component a : this.getComponents()) {
+            if (a instanceof BoxComponent) {
+                this.remove(a);
+            }
         }
         boxes.clear();
-        this.removeAll();
         //build Component
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
+                int id = map[i][j];
                 BoxComponent box = null;
-                if (map[i][j] == 1) {
-                    box = new BoxComponent(Color.ORANGE, i, j);
-                    box.setSize(GRID_SIZE, GRID_SIZE);
-                    map[i][j] = 0;
-                } else if (map[i][j] == 2) {
-                    box = new BoxComponent(Color.PINK, i, j);
-                    box.setSize(GRID_SIZE * 2, GRID_SIZE);
-                    map[i][j] = 0;
-                    map[i][j + 1] = 0;
-                } else if (map[i][j] == 3) {
-                    box = new BoxComponent(Color.BLUE, i, j);
-                    box.setSize(GRID_SIZE, GRID_SIZE * 2);
-                    map[i][j] = 0;
-                    map[i + 1][j] = 0;
-                } else if (map[i][j] == 4) {
-                    box = new BoxComponent(Color.GREEN, i, j);
-                    box.setSize(GRID_SIZE * 2, GRID_SIZE * 2);
-                    map[i][j] = 0;
-                    map[i + 1][j] = 0;
-                    map[i][j + 1] = 0;
-                    map[i + 1][j + 1] = 0;
+                Image image = loadImageForId(id);
+                if (image!=null){
+                    box = new BoxComponent(image, i, j);
+                    if (map[i][j] == 1) {
+                        box = new BoxComponent(image, i, j);
+                        box.setSize(GRID_SIZE, GRID_SIZE);
+                        map[i][j] = 7;
+                    } else if (map[i][j] == 2) {
+                        box = new BoxComponent(image, i, j);
+                        box.setSize(GRID_SIZE * 2, GRID_SIZE);
+                        map[i][j] = 7;
+                        map[i][j + 1] = 7;
+                    } else if (map[i][j] == 3) {
+                        box = new BoxComponent(image, i, j);
+                        box.setSize(GRID_SIZE, GRID_SIZE * 2);
+                        map[i][j] = 7;
+                        map[i + 1][j] = 7;
+                    } else if (map[i][j] == 4) {
+                        box = new BoxComponent(image, i, j);
+                        box.setSize(GRID_SIZE * 2, GRID_SIZE * 2);
+                        map[i][j] = 7;
+                        map[i + 1][j] = 7;
+                        map[i][j + 1] = 7;
+                        map[i + 1][j + 1] = 7;
+                    }else if (map[i][j] == 5) {
+                        box = new BoxComponent(image, i, j);
+                        box.setSize(GRID_SIZE * 2, GRID_SIZE);
+                        map[i][j] = 7;
+                        map[i][j + 1] = 7;
+                    }else if (map[i][j] == 6) {
+                        box = new BoxComponent(image, i, j);
+                        box.setSize(GRID_SIZE * 2, GRID_SIZE);
+                        map[i][j] = 7;
+                        map[i][j + 1] = 7;
+                    }else if (map[i][j] == 8) {
+                        box = new BoxComponent(image, i, j);
+                        box.setSize(GRID_SIZE * 2, GRID_SIZE);
+                        map[i][j] = 7;
+                        map[i][j + 1] = 7;
+                    }
                 }
                 if (box != null) {
                     box.setLocation(j * GRID_SIZE + 2, i * GRID_SIZE + 2);
@@ -96,8 +125,15 @@ public class GamePanel extends ListenerPanel {
                 }
             }
         }
+        selectedBox = null;
+        steps = 0;
+        if (stepLabel != null) {
+            stepLabel.setText("Step: 0");
+        }
+
         this.revalidate();
         this.repaint();
+
     }
 
     @Override
@@ -107,6 +143,20 @@ public class GamePanel extends ListenerPanel {
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         Border border = BorderFactory.createLineBorder(Color.DARK_GRAY, 2);
         this.setBorder(border);
+    }
+
+    private Image loadImageForId(int id) {
+        if (IMAGE_CACHE.containsKey(id)) {
+            return IMAGE_CACHE.get(id);
+        }
+        try {
+            String imagePath = "/images/block_" + id + ".png";
+            Image image = new ImageIcon(getClass().getResource(imagePath)).getImage();
+            IMAGE_CACHE.put(id, image);
+            return image;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -129,9 +179,9 @@ public class GamePanel extends ListenerPanel {
 
     @Override
     public void doMoveRight() {
-        System.out.println("Click VK_RIGHT");
         if (selectedBox != null) {
             if (controller.doMove(selectedBox.getRow(), selectedBox.getCol(), Direction.RIGHT)) {
+                System.out.println("Click VK_RIGHT");
                 afterMove();
             }
         }
@@ -139,9 +189,10 @@ public class GamePanel extends ListenerPanel {
 
     @Override
     public void doMoveLeft() {
-        System.out.println("Click VK_LEFT");
+        
         if (selectedBox != null) {
             if (controller.doMove(selectedBox.getRow(), selectedBox.getCol(), Direction.LEFT)) {
+                System.out.println("Click VK_LEFT");
                 afterMove();
             }
         }
@@ -149,9 +200,10 @@ public class GamePanel extends ListenerPanel {
 
     @Override
     public void doMoveUp() {
-        System.out.println("Click VK_Up");
+       
         if (selectedBox != null) {
             if (controller.doMove(selectedBox.getRow(), selectedBox.getCol(), Direction.UP)) {
+                 System.out.println("Click VK_Up");
                 afterMove();
             }
         }
@@ -159,9 +211,10 @@ public class GamePanel extends ListenerPanel {
 
     @Override
     public void doMoveDown() {
-        System.out.println("Click VK_DOWN");
+     
         if (selectedBox != null) {
             if (controller.doMove(selectedBox.getRow(), selectedBox.getCol(), Direction.DOWN)) {
+                   System.out.println("Click VK_DOWN");
                 afterMove();
             }
         }
