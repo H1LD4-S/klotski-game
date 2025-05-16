@@ -5,7 +5,9 @@ package model;
  */
 public class MapModel {
     int[][] matrix;
-
+    public void setMatrix(int[][] matrix) {
+        this.matrix = matrix;
+    }
 
     public MapModel(int[][] matrix) {
         this.matrix = matrix;
