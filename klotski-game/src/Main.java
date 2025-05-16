@@ -10,12 +10,12 @@ public class Main {
             LoginFrame loginFrame = new LoginFrame(280, 280);
             loginFrame.setVisible(true);
             MapModel mapModel = new MapModel(new int[][]{
-                    {2, 2, 2, 2, 1},
+                    {2, 2, 5, 5, 1},
                     {4, 4, 3, 1, 0},
                     {4, 4, 3, 1, 0},
-                    {2, 2, 2, 2，1}
+                    {6, 6, 8, 8, 1}
             });
-            GameFrame gameFrame = new GameFrame(600, 450, mapModel);
+            GameFrame gameFrame = new GameFrame(1500, 900, mapModel);
             gameFrame.setVisible(false);
             loginFrame.setGameFrame(gameFrame);
         });
