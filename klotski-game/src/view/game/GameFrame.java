@@ -30,28 +30,30 @@ public class GameFrame extends JFrame {
         this.loadBtn = FrameUtil.createButton(this, "Load", new Point(gamePanel.getWidth() + 80, 210), 80, 50);
         this.stepLabel = FrameUtil.createJLabel(this, "Start", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 80, 70), 180, 50);
         gamePanel.setStepLabel(stepLabel);
-
+        this.loadBtn.addActionListener(e -> {
+            if (currentUser != null) {
+                controller.saveGame();
+                JOptionPane.showMessageDialog(this, "游戏进度保存成功", "提示", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "游客用户无法保存游戏进度", "提示", JOptionPane.INFORMATION_MESSAGE);
+            }
+            gamePanel.requestFocusInWindow();
+        });
         this.restartBtn.addActionListener(e -> {
             controller.restartGame();
             gamePanel.requestFocusInWindow();//enable key listener
         });
-        this.loadBtn.addActionListener(e -> {
-            String string = JOptionPane.showInputDialog(this, "Input path:");
-            System.out.println(string);
-            gamePanel.requestFocusInWindow();//enable key listener
-        });
-        //todo: add other button here
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
     public void setUser(String user) {
         this.currentUser = user;
-        // 游客禁用保存按钮
         if (user == null) {
             loadBtn.setEnabled(false);
         } else {
             loadBtn.setEnabled(true);
         }
+        controller.setCurrentUser(user);
     }
 
 }
