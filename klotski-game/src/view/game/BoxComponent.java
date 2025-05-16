@@ -5,14 +5,14 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 public class BoxComponent extends JComponent {
-    private Color color;
     private int row;
     private int col;
     private boolean isSelected;
+    private Image image;
 
 
-    public BoxComponent(Color color, int row, int col) {
-        this.color = color;
+    public BoxComponent(Image image, int row, int col) {
+        this.image = image;
         this.row = row;
         this.col = col;
         isSelected = false;
@@ -21,8 +21,9 @@ public class BoxComponent extends JComponent {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(color);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        if (image != null) {
+            g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+        }
         Border border ;
         if(isSelected){
             border = BorderFactory.createLineBorder(Color.red,3);
