@@ -15,10 +15,18 @@ import java.io.*;
 public class GameController {
     private final GamePanel view;
     private final MapModel model;
+    private final int[][] initialMatrix;
     private String currentUser;
     public GameController(GamePanel view, MapModel model) {
         this.view = view;
         this.model = model;
+        initialMatrix=new int[model.getHeight()][model.getWidth()];{
+            for (int i = 0; i < initialMatrix.length; i++) {
+                for (int j = 0; j < initialMatrix[0].length; j++) {
+                    initialMatrix[i][j]=model.getId(i,j);
+                }
+            }
+        }
         view.setController(this);
     }
     public void setCurrentUser(String user) {
@@ -64,6 +72,12 @@ public class GameController {
 
     public void restartGame() {
         System.out.println("Do restart game here");
+        for (int i = 0; i < initialMatrix.length; i++) {
+            for (int j = 0; j < initialMatrix[0].length; j++) {
+                model.getMatrix()[i][j]=initialMatrix[i][j];
+            }
+        }
+        view.initialGame();
     }
     private void autoLoadGame() {
         loadGame();
@@ -88,13 +102,14 @@ public class GameController {
             }
         }
 
-        else if (model.getId(row,col)==2){
+        else if (model.getId(row,col)==2||model.getId(row,col)==5||model.getId(row,col)==6||model.getId(row,col)==8){
+            int a = model.getId(row,col);
             int nextRow = row + direction.getRow();
             int nextCol = col + direction.getCol();
             if (direction.getRow()==0){
                 if (model.checkInWidthSize(nextCol)){
                     if (model.getId(row,nextCol)==0){
-                        model.getMatrix()[row][nextCol] = 2;
+                        model.getMatrix()[row][nextCol] = a;
                         model.getMatrix()[row][col-direction.getCol()] = 0;
                         BoxComponent box = view.getSelectedBox();
                         box.setRow(row);
@@ -102,10 +117,10 @@ public class GameController {
                         box.setLocation(box.getCol() * view.getGRID_SIZE()  + 2, box.getRow() * view.getGRID_SIZE() + 2);
                         box.repaint();
                         return true;
-                    }else if (model.getId(row,nextCol)==2){
+                    }else if (model.getId(row,nextCol)==a){
                         if (model.checkInWidthSize(nextCol+direction.getCol())){
                             if (model.getId(row,nextCol+direction.getCol())==0){
-                                model.getMatrix()[row][nextCol+direction.getCol()] = 2;
+                                model.getMatrix()[row][nextCol+direction.getCol()] = a;
                                 model.getMatrix()[row][col] = 0;
                                 BoxComponent box = view.getSelectedBox();
                                 box.setRow(row);
@@ -120,16 +135,16 @@ public class GameController {
             } else {
                 if (model.checkInHeightSize(nextRow)){
                     if (model.checkInWidthSize(col+1)){
-                        if (model.getId(row,col+1)==2){
+                        if (model.getId(row,col+1)==a){
                             if (model.checkInWidthSize(col+2)){
-                                if (model.getId(row,col+2)==2){
+                                if (model.getId(row,col+2)==a){
                                     if (model.checkInWidthSize(col+3)){
-                                        if (model.getId(row,col+3)==2){
+                                        if (model.getId(row,col+3)==a){
                                             if (model.getId(nextRow,col)==0&&model.getId(nextRow,col+1)==0){
                                                 model.getMatrix()[row][col]=0;
                                                 model.getMatrix()[row][col+1]=0;
-                                                model.getMatrix()[nextRow][col]=2;
-                                                model.getMatrix()[nextRow][col+1]=2;
+                                                model.getMatrix()[nextRow][col]=a;
+                                                model.getMatrix()[nextRow][col+1]=a;
                                                 BoxComponent box = view.getSelectedBox();
                                                 box.setRow(nextRow);
                                                 box.setCol(col);
@@ -141,8 +156,8 @@ public class GameController {
                                             if (model.getId(nextRow,col)==0&&model.getId(nextRow,col-1)==0){
                                                 model.getMatrix()[row][col]=0;
                                                 model.getMatrix()[row][col-1]=0;
-                                                model.getMatrix()[nextRow][col]=2;
-                                                model.getMatrix()[nextRow][col-1]=2;
+                                                model.getMatrix()[nextRow][col]=a;
+                                                model.getMatrix()[nextRow][col-1]=a;
                                                 BoxComponent box = view.getSelectedBox();
                                                 box.setRow(nextRow);
                                                 box.setCol(col);
@@ -155,8 +170,8 @@ public class GameController {
                                         if (model.getId(nextRow,col)==0&&model.getId(nextRow,col-1)==0){
                                             model.getMatrix()[row][col]=0;
                                             model.getMatrix()[row][col-1]=0;
-                                            model.getMatrix()[nextRow][col]=2;
-                                            model.getMatrix()[nextRow][col-1]=2;
+                                            model.getMatrix()[nextRow][col]=a;
+                                            model.getMatrix()[nextRow][col-1]=a;
                                             BoxComponent box = view.getSelectedBox();
                                             box.setRow(nextRow);
                                             box.setCol(col);
@@ -169,8 +184,8 @@ public class GameController {
                                     if (model.getId(nextRow,col)==0&&model.getId(nextRow,col+1)==0){
                                         model.getMatrix()[row][col]=0;
                                         model.getMatrix()[row][col+1]=0;
-                                        model.getMatrix()[nextRow][col]=2;
-                                        model.getMatrix()[nextRow][col+1]=2;
+                                        model.getMatrix()[nextRow][col]=a;
+                                        model.getMatrix()[nextRow][col+1]=a;
                                         BoxComponent box = view.getSelectedBox();
                                         box.setRow(nextRow);
                                         box.setCol(col);
@@ -183,8 +198,8 @@ public class GameController {
                                 if (model.getId(nextRow,col)==0&&model.getId(nextRow,col+1)==0){
                                     model.getMatrix()[row][col]=0;
                                     model.getMatrix()[row][col+1]=0;
-                                    model.getMatrix()[nextRow][col]=2;
-                                    model.getMatrix()[nextRow][col+1]=2;
+                                    model.getMatrix()[nextRow][col]=a;
+                                    model.getMatrix()[nextRow][col+1]=a;
                                     BoxComponent box = view.getSelectedBox();
                                     box.setRow(nextRow);
                                     box.setCol(col);
@@ -197,8 +212,8 @@ public class GameController {
                             if (model.getId(nextRow,col)==0&&model.getId(nextRow,col-1)==0){
                                 model.getMatrix()[row][col]=0;
                                 model.getMatrix()[row][col-1]=0;
-                                model.getMatrix()[nextRow][col]=2;
-                                model.getMatrix()[nextRow][col-1]=2;
+                                model.getMatrix()[nextRow][col]=a;
+                                model.getMatrix()[nextRow][col-1]=a;
                                 BoxComponent box = view.getSelectedBox();
                                 box.setRow(nextRow);
                                 box.setCol(col);
@@ -212,8 +227,8 @@ public class GameController {
                         if (model.getId(nextRow,col)==0&&model.getId(nextRow,col-1)==0){
                             model.getMatrix()[row][col]=0;
                             model.getMatrix()[row][col-1]=0;
-                            model.getMatrix()[nextRow][col]=2;
-                            model.getMatrix()[nextRow][col-1]=2;
+                            model.getMatrix()[nextRow][col]=a;
+                            model.getMatrix()[nextRow][col-1]=a;
                             BoxComponent box = view.getSelectedBox();
                             box.setRow(nextRow);
                             box.setCol(col);
@@ -372,54 +387,54 @@ public class GameController {
             if (direction.getCol()==0){
                 if (model.checkInHeightSize(nextRow)) {
                     if (model.getId(nextRow,col)==4){
-                        if (model.checkInHeightSize(nextRow+1)){
-                            if (model.getId(nextRow+direction.getRow(),col)==0){
-                                if (model.checkInWidthSize(col+1)) {
-                                    if (model.getId(row,col+1)==4){
-                                        if (model.getId(nextRow+direction.getRow(),col+1)==0){
-                                            model.getMatrix()[row][col]=0;
-                                            model.getMatrix()[row][col+1]=0;
-                                            model.getMatrix()[nextRow][col]=4;
-                                            model.getMatrix()[nextRow][col+1]=4;
-                                            model.getMatrix()[nextRow+direction.getRow()][col]=4;
-                                            model.getMatrix()[nextRow+direction.getRow()][col+1]=4;
-                                            BoxComponent box = view.getSelectedBox();
-                                            box.setRow(nextRow);
-                                            box.setCol(col);
-                                            box.setLocation(box.getCol() * view.getGRID_SIZE() + 2, box.getRow() * view.getGRID_SIZE() + 2);
-                                            box.repaint();
-                                            return true;
-                                        }else return false;
-                                    }else if (model.getId(nextRow+direction.getRow(),col-1)==0){
-                                        model.getMatrix()[row][col]=0;
-                                        model.getMatrix()[row][col-1]=0;
-                                        model.getMatrix()[nextRow][col]=4;
-                                        model.getMatrix()[nextRow][col-1]=4;
-                                        model.getMatrix()[nextRow+direction.getRow()][col]=4;
-                                        model.getMatrix()[nextRow+direction.getRow()][col-1]=4;
-                                        BoxComponent box = view.getSelectedBox();
-                                        box.setRow(nextRow);
-                                        box.setCol(col);
-                                        box.setLocation(box.getCol() * view.getGRID_SIZE() + 2, box.getRow() * view.getGRID_SIZE() + 2);
-                                        box.repaint();
-                                        return true;
-                                    }else return false;
-                                }else if (model.getId(nextRow+direction.getRow(),col-1)==0){
-                                    model.getMatrix()[row][col]=0;
-                                    model.getMatrix()[row][col-1]=0;
-                                    model.getMatrix()[nextRow][col]=4;
-                                    model.getMatrix()[nextRow][col-1]=4;
-                                    model.getMatrix()[nextRow+direction.getRow()][col]=4;
-                                    model.getMatrix()[nextRow+direction.getRow()][col-1]=4;
-                                    BoxComponent box = view.getSelectedBox();
-                                    box.setRow(nextRow);
-                                    box.setCol(col);
-                                    box.setLocation(box.getCol() * view.getGRID_SIZE() + 2, box.getRow() * view.getGRID_SIZE() + 2);
-                                    box.repaint();
-                                    return true;
-                                }else return false;
-                            }else return false;
-                        }else return false;
+                       if (model.checkInHeightSize(nextRow+1)){
+                           if (model.getId(nextRow+direction.getRow(),col)==0){
+                               if (model.checkInWidthSize(col+1)) {
+                                   if (model.getId(row,col+1)==4){
+                                       if (model.getId(nextRow+direction.getRow(),col+1)==0){
+                                           model.getMatrix()[row][col]=0;
+                                           model.getMatrix()[row][col+1]=0;
+                                           model.getMatrix()[nextRow][col]=4;
+                                           model.getMatrix()[nextRow][col+1]=4;
+                                           model.getMatrix()[nextRow+direction.getRow()][col]=4;
+                                           model.getMatrix()[nextRow+direction.getRow()][col+1]=4;
+                                           BoxComponent box = view.getSelectedBox();
+                                           box.setRow(nextRow);
+                                           box.setCol(col);
+                                           box.setLocation(box.getCol() * view.getGRID_SIZE() + 2, box.getRow() * view.getGRID_SIZE() + 2);
+                                           box.repaint();
+                                           return true;
+                                       }else return false;
+                                   }else if (model.getId(nextRow+direction.getRow(),col-1)==0){
+                                       model.getMatrix()[row][col]=0;
+                                       model.getMatrix()[row][col-1]=0;
+                                       model.getMatrix()[nextRow][col]=4;
+                                       model.getMatrix()[nextRow][col-1]=4;
+                                       model.getMatrix()[nextRow+direction.getRow()][col]=4;
+                                       model.getMatrix()[nextRow+direction.getRow()][col-1]=4;
+                                       BoxComponent box = view.getSelectedBox();
+                                       box.setRow(nextRow);
+                                       box.setCol(col);
+                                       box.setLocation(box.getCol() * view.getGRID_SIZE() + 2, box.getRow() * view.getGRID_SIZE() + 2);
+                                       box.repaint();
+                                       return true;
+                                   }else return false;
+                               }else if (model.getId(nextRow+direction.getRow(),col-1)==0){
+                                   model.getMatrix()[row][col]=0;
+                                   model.getMatrix()[row][col-1]=0;
+                                   model.getMatrix()[nextRow][col]=4;
+                                   model.getMatrix()[nextRow][col-1]=4;
+                                   model.getMatrix()[nextRow+direction.getRow()][col]=4;
+                                   model.getMatrix()[nextRow+direction.getRow()][col-1]=4;
+                                   BoxComponent box = view.getSelectedBox();
+                                   box.setRow(nextRow);
+                                   box.setCol(col);
+                                   box.setLocation(box.getCol() * view.getGRID_SIZE() + 2, box.getRow() * view.getGRID_SIZE() + 2);
+                                   box.repaint();
+                                   return true;
+                               }else return false;
+                           }else return false;
+                       }else return false;
                     }else if (model.getId(nextRow,col)==0){
                         if (model.checkInWidthSize(col+1)){
                             if (model.getId(row,col+1)==4){
@@ -568,6 +583,7 @@ public class GameController {
             }
         }
         return false;
+
     }
 
     //todo: add other methods such as loadGame, saveGame...
