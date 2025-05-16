@@ -57,13 +57,12 @@ public class GamePanel extends ListenerPanel {
      */
     public void initialGame() {
         this.steps = 0;
-        //copy a map
         int[][] map = new int[model.getHeight()][model.getWidth()];
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                map[i][j] = model.getId(i, j);
-            }
+        for (int i = 0; i < model.getHeight(); i++) {
+            System.arraycopy(model.getMatrix()[i], 0, map[i], 0, model.getWidth());
         }
+        boxes.clear();
+        this.removeAll();
         //build Component
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
@@ -97,6 +96,7 @@ public class GamePanel extends ListenerPanel {
                 }
             }
         }
+        this.revalidate();
         this.repaint();
     }
 
