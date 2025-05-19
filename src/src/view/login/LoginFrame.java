@@ -26,6 +26,12 @@ public class LoginFrame extends JFrame {
         this.setLayout(null);
         this.setSize(width, height);
         this.userManager = new UserManager();
+
+         // 创建带背景的面板，并设置为窗口的内容面板
+        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/login.png"); // 替换为你的图片路径
+        backgroundPanel.setLayout(null); // 使用绝对布局
+        this.setContentPane(backgroundPanel); // 替换默认的ContentPane
+        
         JLabel userLabel = FrameUtil.createJLabel(this, new Point(90, 60), 100, 40, "用户名:");
         JLabel passLabel = FrameUtil.createJLabel(this, new Point(90, 110), 100, 40, "密码:");
         username = FrameUtil.createJTextField(this, new Point(150, 60), 120, 40);
