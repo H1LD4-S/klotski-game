@@ -19,6 +19,7 @@ public class GameController {
     private final MapModel model;
     private final int[][] initialMatrix;
     private String currentUser;
+    private int currentLevel;
 
 
 
@@ -48,11 +49,15 @@ public class GameController {
             autoLoadGame();//登录后加载进度
         }
     }
+
+    public void setCurrentLevel(int level) {
+        this.currentLevel = level;
+    }
     public void saveGame() {
         if (currentUser == null) {
             return; // 游客无法保存进度
         }
-        String filePath = currentUser + "_game.data";
+        String filePath = currentUser + "_level" + currentLevel + ".data";
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
             oos.writeObject(model.getMatrix());
             oos.writeInt(view.getSteps());
@@ -64,7 +69,7 @@ public class GameController {
         if (currentUser == null) {
             return; // 游客无法加载进度
         }
-        String filePath = currentUser + "_game.data";
+        String filePath = currentUser + "_level" + currentLevel + ".data";
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             int[][] savedMatrix = (int[][]) ois.readObject();
             int savedSteps = ois.readInt();
@@ -82,7 +87,21 @@ public class GameController {
         }
     }
     private void autoLoadGame() {
-        loadGame();
+        String filePath = currentUser + "_level" + currentLevel + ".data";
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            // 如果存档不存在，初始化默认存档
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+                // 使用当前模型的初始矩阵和步数0
+                oos.writeObject(model.getMatrix());
+                oos.writeInt(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            loadGame();
+        }
     }
 
     public void restartGame() {
