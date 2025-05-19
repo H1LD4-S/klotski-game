@@ -19,6 +19,7 @@ public class LoginFrame extends JFrame {
     private JButton guestloginBtn;
     private JButton registerBtn;//添加注册和登录按钮
     private UserManager userManager;
+    private MenuFrame menuFrame;
 
 
     public LoginFrame(int width, int height) {
@@ -27,15 +28,19 @@ public class LoginFrame extends JFrame {
         this.setSize(width, height);
         this.userManager = new UserManager();
 
-         // 创建带背景的面板，并设置为窗口的内容面板
+        // 创建带背景的面板，并设置为窗口的内容面板
         BackgroundPanel backgroundPanel = new BackgroundPanel("/images/login.png"); // 替换为你的图片路径
         backgroundPanel.setLayout(null); // 使用绝对布局
         this.setContentPane(backgroundPanel); // 替换默认的ContentPane
-        
-        JLabel userLabel = FrameUtil.createJLabel(this, new Point(90, 60), 100, 40, "用户名:");
-        JLabel passLabel = FrameUtil.createJLabel(this, new Point(90, 110), 100, 40, "密码:");
-        username = FrameUtil.createJTextField(this, new Point(150, 60), 120, 40);
-        password = FrameUtil.createJTextField(this, new Point(150, 110), 120, 40);
+
+
+
+        JLabel userLabel = FrameUtil.createJLabel(this, new Point(90, 70), 120, 48, "用户名:");
+        JLabel passLabel = FrameUtil.createJLabel(this, new Point(90, 120), 120, 48, "密码:");
+        userLabel.setForeground(Color.WHITE);
+        passLabel.setForeground(Color.WHITE);
+        username = FrameUtil.createJTextField(this, new Point(150, 70), 120, 40);
+        password = FrameUtil.createJTextField(this, new Point(150, 120), 120, 40);
 
         submitBtn = FrameUtil.createButton(this, "登录", new Point(60, 200), 130, 40);
         resetBtn = FrameUtil.createButton(this, "清空", new Point(220, 200), 130, 40);
@@ -47,10 +52,14 @@ public class LoginFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String usernameInput = username.getText();
                 String passwordInput = password.getText();
+                if (usernameInput.isEmpty() || passwordInput.isEmpty()) {
+                    JOptionPane.showMessageDialog(LoginFrame.this,"输入不能为空","登陆失败",JOptionPane.ERROR_MESSAGE); // 提示输入不能为空
+                    return;
+                }
                 if (userManager.login(usernameInput, passwordInput)) {
-                    if (gameFrame != null) {
-                        gameFrame.setVisible(true);
-                        gameFrame.setUser(usernameInput); // 可添加方法记录当前用户
+                    if (menuFrame != null) {
+                        menuFrame.setVisible(true);
+
                         setVisible(false);
                     }
                 } else {
@@ -83,7 +92,7 @@ public class LoginFrame extends JFrame {
                 String passwordInput = password.getText();
                 if (userManager.register(usernameInput, passwordInput)) {
                     JOptionPane.showMessageDialog(LoginFrame.this, "注册成功", "注册", JOptionPane.INFORMATION_MESSAGE);
-                } else {
+                }else {
                     JOptionPane.showMessageDialog(LoginFrame.this, "用户名已存在", "注册失败", JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -96,4 +105,9 @@ public class LoginFrame extends JFrame {
     public void setGameFrame(GameFrame gameFrame) {
         this.gameFrame = gameFrame;
     }
+
+    public void setMenuFrame(MenuFrame menuFrame){
+        this.menuFrame = menuFrame;
+    }
+
 }
