@@ -28,9 +28,19 @@ public class GameFrame extends JFrame {
         this.add(gamePanel);
         this.controller = new GameController(gamePanel, mapModel);
 
+        // 创建带背景的面板，并设置为窗口的内容面板
+        GameBackgroundPanel backgroundPanel = new GameBackgroundPanel("/images/game.png"); // 替换为你的图片路径
+        backgroundPanel.setLayout(null); // 使用绝对布局
+        this.setContentPane(backgroundPanel); // 替换默认的ContentPane
+
         this.restartBtn = FrameUtil.createButton(this, "重新开始", new Point(gamePanel.getWidth() + 180, 620), 100, 50);
         this.loadBtn = FrameUtil.createButton(this, "载入", new Point(gamePanel.getWidth() + 180, 710), 80, 50);
         this.stepLabel = FrameUtil.createJLabel(this, "开始游戏", new Font("serif", Font.ITALIC, 35), new Point(gamePanel.getWidth() + 180, 470), 180, 50);
+        stepLabel.setForeground(Color.WHITE);
+        backgroundPanel.add(restartBtn);
+        backgroundPanel.add(loadBtn);
+        backgroundPanel.add(stepLabel);
+        backgroundPanel.add(gamePanel);
 
 
 
