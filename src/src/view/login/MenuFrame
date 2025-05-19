@@ -1,0 +1,99 @@
+package view.login;
+
+import model.MapModel;
+import view.FrameUtil;
+import view.game.GameFrame;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.nio.channels.FileChannel;
+
+public class MenuFrame extends JFrame {
+    private JButton firstPassBtn;
+    private JButton secondPassBtn;
+    private JButton thirdPassBtn;
+    private final GameFrame firstGame;
+    private GameFrame secondGame;
+    private GameFrame thirdGame;
+    private String currentUser;
+    private int currentLevel;
+
+    public MenuFrame(int width, int height){
+        this.setTitle("关卡选择");
+        this.setLayout(null);
+        this.setSize(width,height);
+
+        firstPassBtn = FrameUtil.createButton(this, "第一关", new Point(60, 50), 120, 40);
+        secondPassBtn = FrameUtil.createButton(this, "第二关", new Point(60, 180), 120, 40);
+        thirdPassBtn = FrameUtil.createButton(this, "第三关", new Point(60, 300), 120, 40);
+
+        firstPassBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                firstGame.setCurrentLevel(1);
+                firstGame.setVisible(true);
+                setVisible(false);
+            }
+        });
+
+        secondPassBtn.addActionListener(new  ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                secondGame.setCurrentLevel(2);
+
+                secondGame.setVisible(true);
+                setVisible(false);
+            }
+        });
+
+        thirdPassBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                thirdGame.setCurrentLevel(3);
+                thirdGame.setVisible(true);
+                setVisible(false);
+            }
+        });
+
+        MapModel game1 = new MapModel(new int[][]{
+                {2, 2, 5, 5, 1},
+                {4, 4, 3, 1, 0},
+                {4, 4, 3, 1, 0},
+                {6, 6, 8, 8, 1}
+        });
+
+        firstGame = new GameFrame(1200,700,game1);
+        firstGame.setVisible(false);
+
+        MapModel game2 = new MapModel(new int[][]{
+                {0,0,2,2},
+                {0,0,3,1},
+                {5,5,3,1},
+                {1,1,0,0}
+        });
+
+        secondGame = new GameFrame(1200,700,game2);
+        secondGame.setVisible(false);
+
+        MapModel game3 = new MapModel(new int[][]{
+                {2, 2, 5, 5, 1},
+                {4, 4, 0, 0, 0},
+                {4, 4, 0, 0, 0},
+                {6, 6, 8, 8, 1}
+        });
+
+        thirdGame = new GameFrame(1200,700,game3);
+        thirdGame.setVisible(false);
+    }
+
+    public void setCurrentUser(String user) {
+        this.currentUser = user;
+        firstGame.setUser(user);
+        secondGame.setUser(user);
+        thirdGame.setUser(user);// 将用户状态传递给第一关的GameFrame
+    }
+
+
+}
