@@ -9,6 +9,7 @@ import view.game.GamePanel;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.Arrays;
 
 /**
  * It is a bridge to combine GamePanel(view) and MapMatrix(model) in one game.
@@ -20,20 +21,22 @@ public class GameController {
     private final int[][] initialMatrix;
     private String currentUser;
     private int currentLevel;
+    private boolean initialized = false;
 
 
 
     public GameController(GamePanel view, MapModel model) {
         this.view = view;
         this.model = model;
-        initialMatrix=new int[model.getHeight()][model.getWidth()];{
-            for (int i = 0; i < initialMatrix.length; i++) {
-                for (int j = 0; j < initialMatrix[0].length; j++) {
-                    initialMatrix[i][j]=model.getId(i,j);
-                }
-            }
-        }
+
+        this.initialMatrix = deepCopyMatrix(model.getMatrix());
         view.setController(this);
+    }
+
+    private int[][] deepCopyMatrix(int[][] source) {
+        return Arrays.stream(source)
+                .map(int[]::clone)
+                .toArray(int[][]::new);
     }
 
     public boolean isWin(){
@@ -64,7 +67,9 @@ public class GameController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
+
     public void loadGame() {
         if (currentUser == null) {
             return; // 游客无法加载进度
@@ -105,13 +110,11 @@ public class GameController {
     }
 
     public void restartGame() {
-        System.out.println("Do restart game here");
-        for (int i = 0; i < initialMatrix.length; i++) {
-            for (int j = 0; j < initialMatrix[0].length; j++) {
-                model.getMatrix()[i][j]=initialMatrix[i][j];
-            }
-        }
+        model.setMatrix(deepCopyMatrix(initialMatrix));//换成深度拷贝
+        view.clearBoxes();
         view.initialGame();
+        view.setSteps(0); // 重置步数
+        System.out.println("已重置到关卡原始状态");
     }
 
     public boolean doMove(int row, int col, Direction direction) {
@@ -616,6 +619,22 @@ public class GameController {
         }
         return false;
 
+    }
+
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    public void markInitialized() {
+        this.initialized = true;
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public int getCurrentLevel() {
+        return currentLevel;
     }
 
     //todo: add other methods such as loadGame, saveGame...
