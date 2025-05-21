@@ -118,6 +118,7 @@ public class GameController {
     }
 
     public boolean doMove(int row, int col, Direction direction) {
+        AudioPlayer.playMoveSound();
         if (model.getId(row, col) == 1) {
             int nextRow = row + direction.getRow();
             int nextCol = col + direction.getCol();
