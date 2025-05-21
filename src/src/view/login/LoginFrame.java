@@ -58,9 +58,9 @@ public class LoginFrame extends JFrame {
                 }
                 if (userManager.login(usernameInput, passwordInput)) {
                     if (menuFrame != null) {
+                        menuFrame.setCurrentUser(usernameInput);
                         menuFrame.setVisible(true);
-
-                        setVisible(false);
+                        setVisible(false);//这里原来忘了把用户名传过去，导致无法保存游戏进度！！！
                     }
                 } else {
                     JOptionPane.showMessageDialog(LoginFrame.this, "用户名或密码错误", "登录失败", JOptionPane.ERROR_MESSAGE);
