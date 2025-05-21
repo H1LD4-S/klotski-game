@@ -69,10 +69,10 @@ public class MenuFrame extends JFrame {
         firstGame.setVisible(false);
 
         MapModel game2 = new MapModel(new int[][]{
-                {4,4,2,2,1},
-                {4,4,3,1,0},
-                {5,5,3,1,0},
-                {1,1,0,0,1},
+               {2,2,4,4,3},
+                {1,0,4,4,3},
+                {5,5,1,1,3},
+                {0,1,8,8,3},
         });
 
         secondGame = new GameFrame(1200,700,game2);
@@ -80,10 +80,10 @@ public class MenuFrame extends JFrame {
 
 
         MapModel game3 = new MapModel(new int[][]{
-                {2, 2, 5, 5, 1},
-                {4, 4, 0, 0, 0},
-                {4, 4, 0, 0, 0},
-                {6, 6, 8, 8, 1}
+               {0, 1, 2, 2, 1},
+                {4, 4, 3, 3, 3},
+                {4, 4, 3, 3, 3},
+                {0, 1, 6, 6, 1}
         });
 
         thirdGame = new GameFrame(1200,700,game3);
