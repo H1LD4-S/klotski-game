@@ -1,5 +1,6 @@
 package view.login;
 
+import controller.GameController;
 import model.MapModel;
 import view.FrameUtil;
 import view.game.GameFrame;
@@ -68,14 +69,15 @@ public class MenuFrame extends JFrame {
         firstGame.setVisible(false);
 
         MapModel game2 = new MapModel(new int[][]{
-                {0,0,2,2},
-                {0,0,3,1},
-                {5,5,3,1},
-                {1,1,0,0}
+                {4,4,2,2,1},
+                {4,4,3,1,0},
+                {5,5,3,1,0},
+                {1,1,0,0,1},
         });
 
         secondGame = new GameFrame(1200,700,game2);
         secondGame.setVisible(false);
+
 
         MapModel game3 = new MapModel(new int[][]{
                 {2, 2, 5, 5, 1},
